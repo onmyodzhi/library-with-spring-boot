@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Show</title>
+    <style>
+        .overdue {
+            background-color: red;
+        }
+    </style>
+</head>
+<body>
+<p th:text="${person.toString()}">VALUE</p>
+
+<div th:if="${books.isEmpty()}">
+    <p>This person didn't take any books</p>
+    <hr/>
+</div>
+
+<div th:if="${!books.isEmpty()}">
+    <hr/>
+    <b>Books:</b>
+    <br/>
+    <table>
+        <tr th:each="book : ${books}" th:classappend="${book.dateOfAssign.plusDays(10).isBefore(T(java.time.LocalDate).now())} ? 'overdue' : ''">
+            <td th:text="${book.title + ', ' + book.author + ', ' + book.ageOfRelease}">book</td>
+        </tr>
+    </table>
+    <hr/>
+</div>
+
+<form th:method="GET" th:action="@{/people/{person_id}/edit(person_id=${person.personId})}">
+    <input type="submit" th:value="Edit"/>
+</form>
+
+<form th:method="DELETE" th:action="@{/people/{person_id}(person_id=${person.personId})}">
+    <input type="submit" value="Delete"/>
+</form>
+</body>
+</html>

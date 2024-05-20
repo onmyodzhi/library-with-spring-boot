@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Search Books</title>
+</head>
+<body>
+<h1>Search for a Book</h1>
+<form method="get">
+    <label for="title">Book Title:</label>
+    <input type="text" id="title" name="titleLike" th:value="${titleLike}">
+    <button type="submit">Search</button>
+</form>
+<div th:if="${titleLike}">
+    <h2>Search Results for: <span th:text="${titleLike}"></span></h2>
+    <div th:if="${#lists.isEmpty(books)}">
+        <p>No books found with the title starting with "<span th:text="${titleLike}"></span>".</p>
+    </div>
+    <div th:if="${not #lists.isEmpty(books)}">
+        <ul>
+            <li th:each="book : ${books}">
+                <p><strong>Title:</strong> <a th:href="@{/books/{id}(id=${book.getBookId()})}"
+                                              th:text="${book.getTitle()}"></a></p>
+                <p><strong>Author:</strong> <span th:text="${book.getAuthor()}"></span></p>
+                <div th:if="${book.getOwner()}">
+                    <p><strong>Owner:</strong> <a th:href="@{/people/{id}(id=${book.getOwner().getPersonId()})}" th:text="${book.getOwner().getFullName()}"></a></p>
+                    <!-- Add other owner details as needed -->
+                </div>
+                <div th:if="${book.getOwner() == null}">
+                    <p>This book is available.</p>
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>
+
+</body>
+</html>
